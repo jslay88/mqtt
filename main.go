@@ -78,7 +78,7 @@ func main() {
 		for {
 			select {
 			case <-ticker.C:
-				message := fmt.Sprintf("Message %d from Go client", counter)
+				message := fmt.Sprintf("Message %d from Go client: %s", counter, clientID)
 				token := client.Publish(topic, qos, false, message)
 				token.Wait()
 				if token.Error() != nil {
