@@ -14,11 +14,12 @@ import (
 
 // Configuration constants
 const (
-	broker   = "tcp://mqtt-service:1883" // Update this to mqtt-service:1883 if running in Kubernetes
-	topic    = "test/topic"
-	clientID = "go-mqtt-client"
-	qos      = 1
+	broker = "tcp://mqtt-service:1883" // Update this to mqtt-service:1883 if running in Kubernetes
+	topic  = "test/topic"
+	qos    = 1
 )
+
+var clientID = os.Getenv("HOSTNAME") + "go-mqtt-client"
 
 // MessageHandler handles incoming MQTT messages
 func onMessageReceived(client mqtt.Client, message mqtt.Message) {

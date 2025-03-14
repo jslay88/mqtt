@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: mqtt-client
-          image: ghcr.io/your-username/your-repo/mqtt-client:latest # Replace with your GHCR path
+          image: ghcr.io/jslay88/mqtt/mqtt:latest # Replace with your GHCR path
           resources:
             requests:
               memory: "64Mi"
@@ -29,13 +29,13 @@ spec:
             exec:
               command:
                 - pgrep
-                - mqtt-client
+                - mqtt
             initialDelaySeconds: 5
             periodSeconds: 10
           readinessProbe:
             exec:
               command:
                 - pgrep
-                - mqtt-client
+                - mqtt
             initialDelaySeconds: 5
             periodSeconds: 10
