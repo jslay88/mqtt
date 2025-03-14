@@ -14,7 +14,7 @@ import (
 
 // Configuration constants
 const (
-	broker   = "tcp://localhost:1883" // Update this to mqtt-service:1883 if running in Kubernetes
+	broker   = "tcp://mqtt-service:1883" // Update this to mqtt-service:1883 if running in Kubernetes
 	topic    = "test/topic"
 	clientID = "go-mqtt-client"
 	qos      = 1
