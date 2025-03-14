@@ -1,0 +1,71 @@
+# mqtt-statefulset.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosquitto-config
+data:
+  mosquitto.conf: |
+    listener 1883
+    allow_anonymous true
+    log_type all
+    connection_messages true
+    persistence true
+    persistence_location /mosquitto/data/
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mqtt-broker
+  labels:
+    app: mqtt-broker
+spec:
+  serviceName: mqtt-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mqtt-broker
+  template:
+    metadata:
+      labels:
+        app: mqtt-broker
+    spec:
+      containers:
+        - name: mosquitto
+          image: eclipse-mosquitto:latest
+          ports:
+            - containerPort: 1883
+              name: mqtt
+          volumeMounts:
+            - name: config
+              mountPath: /mosquitto/config/mosquitto.conf
+              subPath: mosquitto.conf
+            - name: data
+              mountPath: /mosquitto/data
+      volumes:
+        - name: config
+          configMap:
+            name: mosquitto-config
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mqtt-service
+  labels:
+    app: mqtt-broker
+spec:
+  selector:
+    app: mqtt-broker
+  ports:
+    - port: 1883
+      targetPort: 1883
+      protocol: TCP
+      name: mqtt
+  clusterIP: None # Headless service for StatefulSet
